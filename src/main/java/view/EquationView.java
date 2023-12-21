@@ -3,9 +3,11 @@ import controller.EquationService;
 import model.Equation;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class EquationView {
@@ -66,34 +68,21 @@ public class EquationView {
         panelMain.add(Box.createRigidArea(new Dimension(0, 100 * scaleFactor))); // додаємо вертикальний проміжок
         panelMain.add(rootPanel);
         panelMain.add(Box.createVerticalGlue());
+    }
 
-        checkButton.addActionListener(e -> new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String equation = equationField.getText();
-                if (equationService.isValidEquation(new Equation(equation, 0))) {
-                    if (equationService.saveEquation(new Equation(equation, 0))) {
-                        JOptionPane.showMessageDialog(panelMain, "Everything is fine, the equation is added to the database");
-                    } else {
-                        JOptionPane.showMessageDialog(panelMain, "Already in the database");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(panelMain, "The equation is NOT correct");
-                }
-            }
-        }).start());
+    public JTextComponent getRootField() {
+        return rootField;
+    }
 
-        searchButton.addActionListener(e -> new Thread(new Runnable() {
-            @Override
-            public void run() {
-                double root = Double.parseDouble(rootField.getText());
-                List<Equation> equations = equationService.findEquationsByRoot(root);
-                if (!equations.isEmpty()) {
-                    JOptionPane.showMessageDialog(panelMain, "Found equations: " + equations);
-                } else {
-                    JOptionPane.showMessageDialog(panelMain, "No equations found with the given root");
-                }
-            }
-        }).start());
+    public AbstractButton getSearchButton() {
+        return searchButton;
+    }
+
+    public JTextComponent getEquationField() {
+        return equationField;
+    }
+
+    public AbstractButton getCheckButton() {
+        return checkButton;
     }
 }

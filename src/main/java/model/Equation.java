@@ -32,7 +32,7 @@ public class Equation {
 
         Equation equation1 = (Equation) o;
 
-        if (Double.compare(getRoot(), equation1.getRoot()) != 0) return false;
+        if (Double.compare(equation1.getRoot(), getRoot()) != 0) return false;
         return getEquation().equals(equation1.getEquation());
     }
 
@@ -50,5 +50,4 @@ public class Equation {
     public String toString() {
         return equation + " = " + root;
     }
-
 }

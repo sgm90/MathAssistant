@@ -2,6 +2,7 @@ package controller;
 
 import model.Equation;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,25 +32,27 @@ public class DatabaseManager {
 
     public void saveEquation(Equation equation) throws SQLException {
         String sql = "INSERT INTO equations (equation, root) VALUES (?, ?)";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, equation.getEquation());
-        statement.setDouble(2, equation.getRoot());
-        statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, equation.getEquation());
+            statement.setDouble(2, equation.getRoot());
+            statement.executeUpdate();
+        }
     }
 
     public List<Equation> findEquationsByRoot(double root) throws SQLException {
         String sql = "SELECT * FROM equations WHERE root = ?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setDouble(1, root);
-        ResultSet resultSet = statement.executeQuery();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, root);
+            ResultSet resultSet = statement.executeQuery();
 
-        List<Equation> equations = new ArrayList<>();
-        while (resultSet.next()) {
-            String equation = resultSet.getString("equation");
-            double rootValue = resultSet.getDouble("root");
-            equations.add(new Equation(equation, rootValue));
+            List<Equation> equations = new ArrayList<>();
+            while (resultSet.next()) {
+                String equation = resultSet.getString("equation");
+                double rootValue = resultSet.getDouble("root");
+                equations.add(new Equation(equation, rootValue));
+            }
+
+            return equations;
         }
-
-        return equations;
     }
 }
