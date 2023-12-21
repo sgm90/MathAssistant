@@ -9,17 +9,18 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                DatabaseManager dbManager = null;
                 try {
-                    DatabaseManager dbManager = new DatabaseManager("jdbc:postgresql://localhost/mydatabase", "myuser", "mypassword");
-                    EquationService equationService = new EquationService(dbManager);
-                    JFrame frame = new JFrame("EquationView");
-                    frame.setContentPane(new EquationView(equationService).getPanelMain());
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    frame.pack();
-                    frame.setVisible(true);
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                    dbManager = new DatabaseManager();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
+                EquationService equationService = new EquationService(dbManager);
+                JFrame frame = new JFrame("EquationView");
+                frame.setContentPane(new EquationView(equationService).getPanelMain());
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.pack();
+                frame.setVisible(true);
             }
         });
     }
