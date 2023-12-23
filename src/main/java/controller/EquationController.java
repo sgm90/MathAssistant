@@ -1,62 +1,66 @@
 package controller;
-
+import DAO.EquationDAO;
 import model.Equation;
+import service.EquationService;
+import service.EquationSolver;
 import view.EquationView;
-
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.List;
-
+import static DAO.EquationDAO.saveEquation;
 public class EquationController {
     private EquationView view;
-    private EquationService service;
+    private EquationService equationService;
+    EquationDAO equationDAO;
 
-    public EquationController(EquationView view, EquationService service) {
+    public EquationController(EquationView view, EquationService equationService) throws SQLException {
         this.view = view;
-        this.service = service;
+        this.equationService = equationService;
+
+
 
         // Додаємо прослуховувач подій до кнопки перевірки
-        view.getCheckButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String equation = view.getEquationField().getText();
-                String rootText = view.getRootField().getText();
-                if (!equation.isEmpty() && !rootText.isEmpty()) {
-                    double root = Double.parseDouble(rootText);
-                    Equation equationObj = new Equation(equation, root);
-                    if (service.isValidEquation(equation) && service.isRootValid(equation, root)) {
-                        service.addEquation(equationObj);
-                        JOptionPane.showMessageDialog(null, "Рівняння вірне, тому додано в базу");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Рівняння невірне");
-                    }
-                } else {
-                    if (equation.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Будь ласка, введіть рівняння");
-                    }
-                    if (rootText.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Будь ласка, введіть корінь рівняння");
-                    }
-                }
+        view.getCheckButton().addActionListener(e -> {
+            String equation = view.getEquationField().getText();
+            if (equation.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please type in your equation");
+                return;
             }
+            if (!EquationService.isEquationValid(equation)) {
+                JOptionPane.showMessageDialog(null, "Equation is not valid");
+                return;
+            }
+            double root = EquationSolver.calculateExpression(equation);
+            Equation equationObj = new Equation(equation);
+            equationObj.setRoot(root);
+            try {
+                saveEquation(equationObj);
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+            JOptionPane.showMessageDialog(null, "Equation is valid and added to DB");
         });
+
+
         // Додаємо прослуховувач подій до кнопки пошуку
-        view.getSearchButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String rootText = view.getRootField().getText();
-                if (!rootText.isEmpty()) {
-                    double root = Double.parseDouble(rootText);
-                    List<Equation> equations = service.findEquationsByRoot(root);
-                    String message = "Результати пошуку:\n";
-                    for (Equation equation : equations) {
-                        message += equation.getEquation() + "\n";
-                    }
-                    JOptionPane.showMessageDialog(null, message);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Будь ласка, введіть корінь для пошуку");
+        view.getSearchButton().addActionListener(e -> {
+            String rootText = view.getRootField().getText();
+            if (!rootText.isEmpty()) {
+                double root = Double.parseDouble(rootText);
+
+                List<Equation> equations;
+                try {
+                    equations = equationDAO.findEquationsByRoot(root);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
+                String message = "Результати пошуку:\n";
+                for (Equation equation : equations) {
+                    message += equation.getEquation() + "\n";
+                }
+                JOptionPane.showMessageDialog(null, message);
+            } else {
+                JOptionPane.showMessageDialog(null, "Будь ласка, введіть корінь для пошуку");
             }
         });
     }

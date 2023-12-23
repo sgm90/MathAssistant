@@ -1,14 +1,9 @@
 package view;
-import controller.EquationService;
-import model.Equation;
+import service.EquationService;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.util.List;
 
 public class EquationView {
     private JTextField equationField;
@@ -22,6 +17,16 @@ public class EquationView {
     public JPanel getPanelMain() {
         return panelMain;
     }
+    public JTextComponent getRootField() {
+        return rootField;
+    }
+    public AbstractButton getSearchButton() {
+        return searchButton;
+    }
+    public JTextComponent getEquationField() {
+        return equationField;
+    }
+    public AbstractButton getCheckButton() {return checkButton;}
 
     public EquationView(EquationService equationService) {
         panelMain = new JPanel();
@@ -44,13 +49,13 @@ public class EquationView {
         // Збільшуємо розміри компонентів та тексту в 5 разів
         int scaleFactor = 5;
         Font currentFont = equationLabel.getFont();
-        Font newFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFont.getSize() * scaleFactor);
-        equationLabel.setFont(newFont);
-        equationField.setFont(newFont);
-        checkButton.setFont(newFont);
-        rootLabel.setFont(newFont);
-        rootField.setFont(newFont);
-        searchButton.setFont(newFont);
+        Font biggerFont = new Font(currentFont.getName(), currentFont.getStyle(), currentFont.getSize() * scaleFactor);
+        equationLabel.setFont(biggerFont);
+        equationField.setFont(biggerFont);
+        checkButton.setFont(biggerFont);
+        rootLabel.setFont(biggerFont);
+        rootField.setFont(biggerFont);
+        searchButton.setFont(biggerFont);
 
         // Додаємо компоненти до equationPanel
         equationPanel.add(equationLabel);
@@ -65,24 +70,8 @@ public class EquationView {
         // Додаємо equationPanel та rootPanel до panelMain
         panelMain.add(Box.createVerticalGlue()); // центруємо компоненти по вертикалі
         panelMain.add(equationPanel);
-        panelMain.add(Box.createRigidArea(new Dimension(0, 100 * scaleFactor))); // додаємо вертикальний проміжок
+        panelMain.add(Box.createRigidArea(new Dimension(0, 25 * scaleFactor))); // додаємо вертикальний проміжок
         panelMain.add(rootPanel);
         panelMain.add(Box.createVerticalGlue());
-    }
-
-    public JTextComponent getRootField() {
-        return rootField;
-    }
-
-    public AbstractButton getSearchButton() {
-        return searchButton;
-    }
-
-    public JTextComponent getEquationField() {
-        return equationField;
-    }
-
-    public AbstractButton getCheckButton() {
-        return checkButton;
     }
 }

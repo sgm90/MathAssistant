@@ -8,6 +8,9 @@ public class Equation {
         this.equation = equation;
         this.root = root;
     }
+    public Equation(String equation){
+        this.equation = equation;
+    }
 
     public String getEquation() {
         return equation;
@@ -24,6 +27,7 @@ public class Equation {
     public void setRoot(double root) {
         this.root = root;
     }
+
 
     @Override
     public boolean equals(Object o) {

@@ -1,29 +1,25 @@
 package controller;
+import service.EquationService;
 import view.EquationView;
 
 import javax.swing.*;
-import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DatabaseManager dbManager = new DatabaseManager();
-                    EquationService equationService = new EquationService(dbManager);
-                    EquationView equationView = new EquationView(equationService);
+        SwingUtilities.invokeLater(() -> {
+            try {
+                EquationService equationService = new EquationService();
+                EquationView equationView = new EquationView(equationService);
 
-                    JFrame frame = new JFrame("EquationView");
-                    frame.setContentPane(equationView.getPanelMain());
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    frame.pack();
-                    frame.setVisible(true);
+                JFrame frame = new JFrame("EquationView");
+                frame.setContentPane(equationView.getPanelMain());
+                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                frame.pack();
+                frame.setVisible(true);
 
-                    new EquationController(equationView, equationService);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                new EquationController(equationView, equationService);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         });
     }

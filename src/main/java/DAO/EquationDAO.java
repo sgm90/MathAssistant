@@ -1,16 +1,15 @@
-package controller;
+package DAO;
 
 import model.Equation;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseManager {
-    private Connection connection;
+public class EquationDAO {
+    private static Connection connection;
 
-    public DatabaseManager() throws SQLException {
+    public EquationDAO() throws SQLException {
         String url = "jdbc:postgresql://localhost/mydatabase";
         String user = "myuser";
         String password = "mypassword";
@@ -30,7 +29,7 @@ public class DatabaseManager {
         }
     }
 
-    public void saveEquation(Equation equation) throws SQLException {
+    public static void saveEquation(Equation equation) throws SQLException {
         String sql = "INSERT INTO equations (equation, root) VALUES (?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, equation.getEquation());
