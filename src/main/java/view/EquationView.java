@@ -1,6 +1,4 @@
 package view;
-import service.EquationService;
-
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -28,7 +26,7 @@ public class EquationView {
     }
     public AbstractButton getCheckButton() {return checkButton;}
 
-    public EquationView(EquationService equationService) {
+    public EquationView() {
         panelMain = new JPanel();
         panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.Y_AXIS));
 

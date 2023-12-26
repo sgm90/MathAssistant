@@ -20,12 +20,21 @@ public class EquationDAO {
 
     private void initializeDatabase() throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT 1 FROM pg_database WHERE datname='mydatabase'");
-
-        if (!resultSet.next()) {
-            statement.execute("CREATE DATABASE mydatabase");
-            statement.execute("\\c mydatabase");
-            statement.execute("CREATE TABLE equations (id SERIAL PRIMARY KEY, equation VARCHAR(255) NOT NULL, root DOUBLE PRECISION NOT NULL)");
+        ResultSet resultSet = statement.executeQuery(
+                "SELECT EXISTS (" +
+                        "SELECT FROM information_schema.tables " +
+                        "WHERE  table_schema = 'public' " +
+                        "AND    table_name   = 'equations'" +
+                        ")"
+        );
+        if (!resultSet.next() || !resultSet.getBoolean(1)) {
+            statement.execute(
+                    "CREATE TABLE equations (" +
+                            "id SERIAL PRIMARY KEY, " +
+                            "equation VARCHAR(255) NOT NULL, " +
+                            "root DOUBLE PRECISION NOT NULL" +
+                            ")"
+            );
         }
     }
 

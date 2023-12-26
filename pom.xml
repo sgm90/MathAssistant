@@ -22,7 +22,6 @@
       <scope>test</scope>
     </dependency>
 
-
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
@@ -37,7 +36,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
         <configuration>
-          <mainClass>src/main/java/controller/Main.java</mainClass>
+          <mainClass>src/main/java/Main</mainClass>
         </configuration>
       </plugin>
     </plugins>
