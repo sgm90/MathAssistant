@@ -8,7 +8,11 @@ Detailed instructions for installing PostgreSQL can be found on the official Pos
 
 ## Creating the Database and User
 
-After installing PostgreSQL, you can create the database and user by running the following script, you will need your SU password to run it:
+After installing PostgreSQL, you can create the database and user by running the following script, you will need your SU password to run it.
+
+## Notes
+
+Mathematical tasks are quite difficult, I hope the logic of solving the task will be evaluated, because I only partially completed it.
 
 ```bash
 ./create_db.sh
